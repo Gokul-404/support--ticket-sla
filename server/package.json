@@ -1,0 +1,39 @@
+{
+  "name": "support-ticket-sla-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "start": "bun src/server.ts",
+    "build": "tsc --noEmit",
+    "seed": "bun prisma/seed.ts",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^16.9.0",
+    "graphql-yoga": "^5.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/luxon": "^3.4.2",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "eslint": "^8.57.0",
+    "prisma": "^5.20.0",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  }
+}
