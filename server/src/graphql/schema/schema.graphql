@@ -1,0 +1,136 @@
+enum UserRole {
+  REPORTER
+  AGENT
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum SLAState {
+  ON_TRACK
+  AT_RISK
+  BREACHED
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  role: UserRole!
+  createdAt: String!
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  author: User!
+  createdAt: String!
+}
+
+type SLAInfo {
+  firstResponseDueAt: String!
+  resolutionDueAt: String!
+  firstResponseState: SLAState!
+  resolutionState: SLAState!
+  firstResponseRemainingMinutes: Int!
+  resolutionRemainingMinutes: Int!
+}
+
+type Ticket {
+  id: ID!
+  title: String!
+  description: String!
+  priority: Priority!
+  status: TicketStatus!
+  reporter: User!
+  assignee: User
+  createdAt: String!
+  updatedAt: String!
+  firstResponseAt: String
+  resolvedAt: String
+  comments: [Comment!]!
+  sla: SLAInfo!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
+type TicketConnection {
+  nodes: [Ticket!]!
+  pageInfo: PageInfo!
+}
+
+type TicketDashboard {
+  openTickets: Int!
+  inProgressTickets: Int!
+  atRiskTickets: Int!
+  breachedTickets: Int!
+}
+
+type Holiday {
+  id: ID!
+  date: String!
+  name: String!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Query {
+  me: User
+  ticket(id: ID!): Ticket
+  tickets(
+    status: TicketStatus
+    priority: Priority
+    assigneeId: ID
+    slaState: SLAState
+    take: Int = 20
+    cursor: String
+  ): TicketConnection!
+  dashboard: TicketDashboard!
+  users(role: UserRole): [User!]!
+  holidays: [Holiday!]!
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
+  role: UserRole!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateTicketInput {
+  title: String!
+  description: String!
+  priority: Priority!
+}
+
+type Mutation {
+  register(input: RegisterInput!): AuthPayload!
+  login(input: LoginInput!): AuthPayload!
+  createTicket(input: CreateTicketInput!): Ticket!
+  assignTicket(ticketId: ID!, assigneeId: ID!): Ticket!
+  changeTicketStatus(ticketId: ID!, status: TicketStatus!): Ticket!
+  resolveTicket(ticketId: ID!): Ticket!
+  addComment(ticketId: ID!, content: String!): Comment!
+}
