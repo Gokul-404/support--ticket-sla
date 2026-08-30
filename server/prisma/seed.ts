@@ -201,9 +201,17 @@ async function main() {
 
   // Delete stale demos so we can recreate with fresh timestamps on every restart.
   // This ensures the SLA states are always correct relative to "now".
+  const demoTitles = [DEMO_ON_TRACK_TITLE, DEMO_AT_RISK_TITLE, DEMO_BREACHED_TITLE];
+  await prisma.comment.deleteMany({
+    where: {
+      ticket: {
+        title: { in: demoTitles },
+      },
+    },
+  });
   await prisma.ticket.deleteMany({
     where: {
-      title: { in: [DEMO_ON_TRACK_TITLE, DEMO_AT_RISK_TITLE, DEMO_BREACHED_TITLE] },
+      title: { in: demoTitles },
     },
   });
 
